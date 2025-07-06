@@ -1,0 +1,2 @@
+packer init almalinux10/almalinux-10-x86_64.pkr.hcl
+packer build -var-file variables.pkrvars.hcl almalinux10/almalinux-10-x86_64.pkr.hcl

@@ -1,0 +1,16 @@
+.PHONY: almalinux9 almalinux10 server22 all
+
+all: almalinux9 almalinux10
+
+almalinux9:
+        packer init almalinux9/almalinux-9-x86_64.pkr.hcl
+        packer build -var-file variables.pkrvars.hcl almalinux9/almalinux-9-x86_64.pkr.hcl
+
+almalinux10:
+        packer init almalinux10/almalinux-10-x86_64.pkr.hcl
+        packer build -var-file variables.pkrvars.hcl almalinux10/almalinux-10-x86_64.pkr.hcl
+        
+server22:
+        packer init server22/server-22-template.pkr.hcl
+        packer build -var-file variables.pkrvars.hcl server22/server-22-template.pkr.hcl
+

@@ -1,0 +1,24 @@
+---
+# playbook.yml demo
+- name: 'Provision Image'
+  hosts: default
+
+  tasks:
+
+    - name: Confirm connectivity
+      win_ping:
+  
+    - name: Create temp directory
+      ansible.windows.win_file:
+        path: C:\Temp
+        state: directory
+
+    - name: Download the 7-Zip package
+      win_get_url:
+        url: https://www.7-zip.org/a/7z2409-x64.msi
+        dest: C:\temp\7z.msi
+    
+    - name: Ensure 7-Zip is installed through win_package
+      win_package:
+        path: C:\temp\7z.msi
+        state: present
