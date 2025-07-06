@@ -89,16 +89,8 @@ variable "cdrom_drive" {
     type = string
     default = "D:"
 }
-<<<<<<< HEAD:proxmox/packer/server22/server-22-template.pkr.hcl
-<<<<<<< HEAD:proxmox/packer/server22/server-22-template.pkr.hcl
 
 
-=======
->>>>>>> 6b805c4 (Update server 2022):packer-proxmox-templates/server22/server-22-template.pkr.hcl
-=======
-
-
->>>>>>> aeb4ed1 (test ignore):packer-proxmox-templates/server22/server-22-template.pkr.hcl
 source "proxmox-iso" "windows2022" {
   insecure_skip_tls_verify  = "true"
   proxmox_url = "${var.proxmox_api_url}"
@@ -176,11 +168,7 @@ source "proxmox-iso" "windows2022" {
   # Boot
   boot_wait = "7s"
   boot_command = [
-<<<<<<< HEAD:proxmox/packer/server22/server-22-template.pkr.hcl
     "<enter>setup.exe /unattend:${var.cdrom_drive}\\autounattend.xml"
-=======
-    "<enter>setup.exe /unattend:${cdrom_drive}\\autounattend.xml"
->>>>>>> 6b805c4 (Update server 2022):packer-proxmox-templates/server22/server-22-template.pkr.hcl
   ]
 
 }
