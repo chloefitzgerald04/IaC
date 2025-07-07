@@ -190,7 +190,7 @@ build {
   }
 
   provisioner "ansible" {
-    playbook_file     = "./server22/ansible/provision-software.yml"
+    playbook_file     = "./server22/ansible/main.yml"
     use_proxy = false
     skip_version_check = true
     user              = "ansible"
