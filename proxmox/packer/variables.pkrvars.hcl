@@ -16,14 +16,14 @@ vm_disk_size = "10G"
 vm_storage_pool = "Ceph"
 vm_disk_format = "raw"
 
+
+windows_edition = "Datacenter" # or standard
 image_index = {
   "core" = 3
   "desktop" = 4
 }
 
 iso_storage_pool = "NAS"
-
-
 almalinux9_iso = "NAS:iso/AlmaLinux-9.4-x86_64-dvd.iso"
 almalinux10_iso = "NAS:iso/alma10.iso"
 ubuntu2404_iso = "NAS:iso/ubuntu-24.04-live-server-amd64(1).iso"
