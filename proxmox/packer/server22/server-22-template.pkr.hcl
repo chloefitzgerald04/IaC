@@ -25,6 +25,18 @@ variable "template" {
   }
 }
 
+variable "windows_edition" {
+  type    = string
+  default = "datacenter"
+}
+
+variable "windows_license_key" {
+  type = map(string)
+  default = {
+    standard   = "VDYBN-27WPP-V4HQT-9VMD4-VMK7H"
+    datacenter = "WX4NM-KYWYW-QJJR4-XV3QB-6VM33"
+  }
+}
 variable "image_index" {
   type = map(string)
 }
@@ -143,7 +155,7 @@ source "proxmox-iso" "windows2022" {
   additional_iso_files {
     cd_files = ["./server22/drivers/*", "./server22/scripts/ConfigureRemotingForAnsible.ps1","./server22/apps/virtio-win-guest-tools.exe"]
     cd_content = {
-      "autounattend.xml" = templatefile("./template/autounattend.pkrtpl", {password = var.ssh_password, cdrom_drive = var.cdrom_drive, index = lookup(var.image_index, var.template, "desktop")})
+      "autounattend.xml" = templatefile("./template/autounattend.pkrtpl", {password = var.ssh_password, cdrom_drive = var.cdrom_drive, windows_license_key = var.windows_license_key[var.windows_edition], index = lookup(var.image_index, var.template, "desktop")})
     }
     cd_label = "Unattend"
     iso_storage_pool = var.iso_storage_pool
