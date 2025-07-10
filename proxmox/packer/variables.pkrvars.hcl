@@ -18,6 +18,7 @@ vm_disk_format = "raw"
 
 
 windows_edition = "Datacenter" # or standard
+desktop_experience = true
 image_index = {
   "core" = 3
   "desktop" = 4
