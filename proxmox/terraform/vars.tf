@@ -25,6 +25,6 @@ variable "token_secret" {
     default = "123abc"
 }
 variable "token_id" {
-    default = "123"
+    default = "test@pve!test"
 }
 
