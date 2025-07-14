@@ -21,7 +21,4 @@ variable "mem" {
 variable "api_url" {
     default = "https://10.0.0.102:8006/api2/json"
 }
-variable "token_secret" {
-}
-variable "token_id" {
-}
+
