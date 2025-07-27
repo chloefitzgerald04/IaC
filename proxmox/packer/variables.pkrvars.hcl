@@ -18,7 +18,7 @@ vm_disk_format = "raw"
 
 
 windows_edition = "datacenter" # can be datacenter or standard
-template = "core" # can be desktop or core
+experience = "desktop" # can be desktop or core
 
 iso_storage_pool = "NAS"
 almalinux9_iso = "NAS:iso/AlmaLinux-9.4-x86_64-dvd.iso"

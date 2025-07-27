@@ -15,12 +15,12 @@ packer {
   }
 }
 
-variable "template" {
+variable "experience" {
   type = string 
   default = "desktop" 
   description = "can be desktop or core"
   validation {
-    condition = (var.template == "desktop") || (var.template == "core")
+    condition = (var.experience == "desktop") || (var.experience == "core")
     error_message = "Should be desktop or core."
   }
 }
@@ -117,9 +117,9 @@ source "proxmox-iso" "windows2022" {
   token = "${var.proxmox_api_token_secret}"
   node = "${var.proxmox_node}"
 
-  template_name = "templ-win2022-${var.template}"
+  template_name = "templ-win2022-${var.windows_edition}-${var.experience}"
   template_description = "Created on: ${timestamp()}"
-  vm_name = "win22-${var.template}"
+  vm_name = "win22-${var.windows_edition}-${var.experience}"
   os = "win11"
 
   cores = "${var.vm_cores}"
@@ -162,7 +162,7 @@ source "proxmox-iso" "windows2022" {
   additional_iso_files {
     cd_files = ["./server22/drivers/*", "./server22/scripts/ConfigureRemotingForAnsible.ps1","./server22/apps/virtio-win-guest-tools.exe"]
     cd_content = {
-      "autounattend.xml" = templatefile("./template/autounattend.pkrtpl", {password = var.ssh_password, cdrom_drive = var.cdrom_drive, windows_license_key = var.windows_license_key[var.windows_edition], index = lookup(var.image_index, "${var.windows_edition}${var.template}", "desktop")})
+      "autounattend.xml" = templatefile("./template/autounattend.pkrtpl", {password = var.ssh_password, cdrom_drive = var.cdrom_drive, windows_license_key = var.windows_license_key[var.windows_edition], index = lookup(var.image_index, "${var.windows_edition}${var.experience}", "desktop")})
     }
     cd_label = "Unattend"
     iso_storage_pool = var.iso_storage_pool
