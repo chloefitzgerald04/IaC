@@ -18,7 +18,7 @@ packer {
 variable "template" {
   type = string 
   default = "desktop" 
-  description = "Template type, can be desktop or core"
+  description = "can be desktop or core"
   validation {
     condition = (var.template == "desktop") || (var.template == "core")
     error_message = "Should be desktop or core."
@@ -39,7 +39,14 @@ variable "windows_license_key" {
 }
 variable "image_index" {
   type = map(string)
+  default = {
+    "standardcore" = 1
+    "standarddesktop" = 2
+    "datacentercore" = 3
+    "datacenterdesktop" = 4
+  }
 }
+
 
 variable "proxmox_api_url" {
     type = string
@@ -155,7 +162,7 @@ source "proxmox-iso" "windows2022" {
   additional_iso_files {
     cd_files = ["./server22/drivers/*", "./server22/scripts/ConfigureRemotingForAnsible.ps1","./server22/apps/virtio-win-guest-tools.exe"]
     cd_content = {
-      "autounattend.xml" = templatefile("./template/autounattend.pkrtpl", {password = var.ssh_password, cdrom_drive = var.cdrom_drive, windows_license_key = var.windows_license_key[var.windows_edition], index = lookup(var.image_index, var.template, "desktop")})
+      "autounattend.xml" = templatefile("./template/autounattend.pkrtpl", {password = var.ssh_password, cdrom_drive = var.cdrom_drive, windows_license_key = var.windows_license_key[var.windows_edition], index = lookup(var.image_index, "${var.windows_edition}${var.template}", "desktop")})
     }
     cd_label = "Unattend"
     iso_storage_pool = var.iso_storage_pool

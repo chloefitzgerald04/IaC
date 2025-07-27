@@ -17,12 +17,8 @@ vm_storage_pool = "Ceph"
 vm_disk_format = "raw"
 
 
-windows_edition = "Datacenter" # or standard
-desktop_experience = true
-image_index = {
-  "core" = 3
-  "desktop" = 4
-}
+windows_edition = "datacenter" # can be datacenter or standard
+template = "core" # can be desktop or core
 
 iso_storage_pool = "NAS"
 almalinux9_iso = "NAS:iso/AlmaLinux-9.4-x86_64-dvd.iso"
