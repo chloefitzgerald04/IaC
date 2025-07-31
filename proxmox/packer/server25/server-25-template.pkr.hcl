@@ -110,16 +110,16 @@ variable "cdrom_drive" {
 }
 
 
-source "proxmox-iso" "windows2022" {
+source "proxmox-iso" "windows2025" {
   insecure_skip_tls_verify  = "true"
   proxmox_url = "${var.proxmox_api_url}"
   username = "${var.proxmox_api_token_id}"
   token = "${var.proxmox_api_token_secret}"
   node = "${var.proxmox_node}"
 
-  template_name = "templ-win2022-${var.windows_edition}-${var.experience}"
+  template_name = "templ-win2025-${var.windows_edition}-${var.experience}"
   template_description = "Created on: ${timestamp()}"
-  vm_name = "win22-${var.windows_edition}-${var.experience}"
+  vm_name = "win25-${var.windows_edition}-${var.experience}"
   os = "win11"
 
   cores = "${var.vm_cores}"
@@ -160,7 +160,7 @@ source "proxmox-iso" "windows2022" {
 
 
   additional_iso_files {
-    cd_files = ["./server22/drivers/*", "./server22/scripts/ConfigureRemotingForAnsible.ps1","./server22/apps/virtio-win-guest-tools.exe"]
+    cd_files = ["./server25/drivers/*", "./server25/scripts/ConfigureRemotingForAnsible.ps1","./server25/apps/virtio-win-guest-tools.exe"]
     cd_content = {
       "autounattend.xml" = templatefile("./template/autounattend.pkrtpl", {password = var.ssh_password, cdrom_drive = var.cdrom_drive, windows_license_key = var.windows_license_key[var.windows_edition], index = lookup(var.image_index, "${var.windows_edition}${var.experience}", "desktop")})
     }
@@ -194,7 +194,7 @@ source "proxmox-iso" "windows2022" {
 
 build {
   name = "Proxmox Build"
-  sources = ["source.proxmox-iso.windows2022"]
+  sources = ["source.proxmox-iso.windows2025"]
 
   provisioner "windows-restart" {
   }
@@ -209,7 +209,7 @@ build {
   }
 
   provisioner "ansible" {
-    playbook_file     = "./server22/ansible/main.yml"
+    playbook_file     = "./server25/ansible/main.yml"
     use_proxy = false
     skip_version_check = true
     user              = "ansible"
