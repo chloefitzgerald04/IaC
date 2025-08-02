@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
     <settings pass="windowsPE">
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+        <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SetupUILanguage>
                 <UILanguage>en-US</UILanguage>
             </SetupUILanguage>
             <InputLocale>en-US</InputLocale>
             <SystemLocale>en-US</SystemLocale>
             <UILanguage>en-US</UILanguage>
-            <UILanguageFallback>en-US</UILanguageFallback>
             <UserLocale>en-US</UserLocale>
         </component>
-        <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-PnpCustomizationsWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
-            <DriverPaths>
-                <PathAndCredentials wcm:action="add" wcm:keyValue="1">
-                    <Path>${cdrom_drive}\</Path>
-                </PathAndCredentials>
-            </DriverPaths>
-        </component>
-        <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">>
             <ImageInstall>
                 <OSImage>
                     <InstallFrom>
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/INDEX</Key>
-                            <Value>${index}</Value>
+                            <Value>4</Value>
                         </MetaData>
                     </InstallFrom>
                     <InstallTo>
@@ -34,18 +26,18 @@
                 </OSImage>
             </ImageInstall>
             <UserData>
-                <ProductKey>
-                    	<Key>${windows_license_key}</Key>
-                    <WillShowUI>OnError</WillShowUI>
-                </ProductKey>
                 <AcceptEula>true</AcceptEula>
                 <FullName>CF</FullName>
                 <Organization>CF</Organization>
+                <ProductKey>
+                    <WillShowUI>Never</WillShowUI>
+		            <Key>D764K-2NDRG-47T6Q-P8T8W-YP6DF</Key>
+                </ProductKey>
             </UserData>
                 <RunSynchronous>
                     <RunSynchronousCommand wcm:action="add">
                         <Order>1</Order>
-                        <Path>cmd.exe /c pnputil -i -a ${cdrom_drive}\*.inf</Path>
+                        <Path>cmd.exe /c pnputil -i -a D:\*.inf</Path>
                     </RunSynchronousCommand>
                     <RunSynchronousCommand wcm:action="add">
                         <Order>2</Order>
@@ -109,7 +101,6 @@
                     </RunSynchronousCommand>
             </RunSynchronous>
         </component>
-
     </settings>
     <settings pass="specialize">
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
@@ -133,7 +124,7 @@
         <component xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" language="neutral" name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
             <AutoLogon>
                 <Password>
-                    <Value>${password}</Value>
+                    <Value>carpool-unruffled1-nutcase</Value>
                     <PlainText>true</PlainText>
                 </Password>
                 <Enabled>true</Enabled>
@@ -151,13 +142,13 @@
             </OOBE>
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>${password}</Value>
+                    <Value>carpool-unruffled1-nutcase</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
 		        <LocalAccounts>
                     <LocalAccount wcm:action="add">
                         <Password>
-                            <Value>${password}</Value>
+                            <Value>carpool-unruffled1-nutcase</Value>
                             <PlainText>true</PlainText>
                         </Password>
                         <Group>administrators</Group>
@@ -173,11 +164,11 @@
                     <CommandLine>powershell.exe -WindowStyle Normal -NoProfile -Command "Rename-computer -newname "CF-SRV-TPL-$(Get-random -minimum 10 -maximum 99)""</CommandLine>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell -ExecutionPolicy Bypass -File ${cdrom_drive}\ConfigureRemotingForAnsible.ps1 -EnableCredSSP</CommandLine>
+                    <CommandLine>powershell -ExecutionPolicy Bypass -File D:\ConfigureRemotingForAnsible.ps1 -EnableCredSSP</CommandLine>
                     <Order>2</Order>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>${cdrom_drive}\virtio-win-guest-tools.exe /install /passive /norestart</CommandLine>
+                    <CommandLine>D:\virtio-win-guest-tools.exe /install /passive /norestart</CommandLine>
                     <Description>Install Guest Tools</Description>
                     <Order>3</Order>
                 </SynchronousCommand>

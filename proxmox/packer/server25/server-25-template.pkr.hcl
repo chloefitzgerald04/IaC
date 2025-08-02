@@ -33,8 +33,9 @@ variable "windows_edition" {
 variable "windows_license_key" {
   type = map(string)
   default = {
-    standard   = "VDYBN-27WPP-V4HQT-9VMD4-VMK7H"
-    datacenter = "WX4NM-KYWYW-QJJR4-XV3QB-6VM33"
+    standard   = "TVRH6-WHNXV-R9WG3-9XRFY-MY832"
+    datacenter = "D764K-2NDRG-47T6Q-P8T8W-YP6DF"
+    
   }
 }
 variable "image_index" {
@@ -99,9 +100,9 @@ variable "iso_storage_pool" {
     description = "Storage pool for ISO files"
 }
 
-variable "server22_iso" {
+variable "server25_iso" {
     type = string
-    description = "Path to the AlmaLinux 10 ISO file"
+    description = "Path to the ISO file"
 }
 
 variable "cdrom_drive" {
@@ -127,6 +128,7 @@ source "proxmox-iso" "windows2025" {
   cpu_type = "host"
   bios = "ovmf"
   machine = "q35"
+  scsi_controller = "virtio-scsi-single"
 
   efi_config {
     efi_storage_pool = "${var.vm_storage_pool}"
@@ -139,7 +141,7 @@ source "proxmox-iso" "windows2025" {
       disk_size = "${var.vm_disk_size}"
       format = "${var.vm_disk_format}"
       storage_pool = "${var.vm_storage_pool}"
-      type = "scsi"
+      type = "sata"
 
   }
 
@@ -153,7 +155,7 @@ source "proxmox-iso" "windows2025" {
   cloud_init_storage_pool = "${var.vm_storage_pool}"
 
   boot_iso {
-      iso_file = "${var.server22_iso}"
+      iso_file = "${var.server25_iso}"
       iso_storage_pool = "${var.iso_storage_pool}"
       unmount = true
   }
@@ -167,10 +169,8 @@ source "proxmox-iso" "windows2025" {
     cd_label = "Unattend"
     iso_storage_pool = var.iso_storage_pool
     unmount = true
-    device = "sata0"
+    device = "sata1"
   }
-  
-  scsi_controller = "virtio-scsi-pci"
   
 
 
@@ -185,9 +185,9 @@ source "proxmox-iso" "windows2025" {
   winrm_insecure        = true
 
   # Boot
-  boot_wait = "7s"
+  boot_wait = "5s"
   boot_command = [
-    "<enter>setup.exe /unattend:${var.cdrom_drive}\\autounattend.xml"
+    "<enter><wait3><enter>setup.exe /unattend:${var.cdrom_drive}\\autounattend.xml"
   ]
 
 }
