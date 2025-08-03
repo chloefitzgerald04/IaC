@@ -76,7 +76,7 @@ variable "os_type_name" {
 variable "pm_api_url" {
   description = "The FQDN and path to the API of the proxmox server e.g. https://example.com:8006/api2/json"
   type        = string
-  default     = " https://10.0.0.102:8006/api2/json"
+  default     = "https://10.0.0.102:8006/api2/json"
 }
 
 variable "pm_api_token_id" {
