@@ -79,7 +79,7 @@ variable "pm_api_url" {
   default     = "https://10.0.0.102:8006/api2/json"
 }
 
-variable "pm_api_token_id" {
+variable "token_id" {
   description = "user@pam!token_id"
   type        = string
   default     = "user@pam!token_id"
@@ -110,7 +110,7 @@ variable "pm_api_token_id" {
     - https://github.com/Telmate/terraform-provider-proxmox/issues/385
     - https://bugzilla.proxmox.com/show_bug.cgi?id=4068
 */
-variable "pm_api_token_secret" {
+variable "token_secret" {
   description = "secret hash"
   type        = string
   sensitive   = true
