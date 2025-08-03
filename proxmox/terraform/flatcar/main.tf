@@ -35,7 +35,8 @@ provider "proxmox" {
 resource "proxmox_vm_qemu" "test_server" {
   count       = var.vm_count # just want 1 for now, set to 0 and apply to destroy VM
   vmid        = var.vm_count > 1 ? var.vm_id + count.index : var.vm_id
-  name        = var.vm_count > 1 ? "${var.name}-${count.index + 1}" : var.name
+  name        = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
+  
   target_node = var.target_node
 
 

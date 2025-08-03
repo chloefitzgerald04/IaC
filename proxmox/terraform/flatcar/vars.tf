@@ -16,36 +16,14 @@ variable "butane_conf_snippets" {
 variable "target_node" {
   description = "The name of the target proxmox node"
   type        = string
+  default     = "pve-02"
 }
 variable "storage" {
   description = "The name of the storage used for storing VM images"
   type        = string
-  default     = "local"
+  default     = "Ceph"
 }
-/*
-  The name of a VM that has been converted to a template. The creation of this
-  process is manual, and has not been automated. The flatcar qemu image is a qcow2
-  image, and not a raw disk image as the name implies.
 
-  Steps:
-    1. Download the latest flatcar qemu image (noting the version number)
-           > wget https://stable.release.flatcar-linux.net/amd64-usr/3510.2.6/flatcar_production_qemu_image.img.bz2
-    2. Create a new VM with the name 'flatcar-production-qemu-<version>' (e.g. flatcar-production-qemu-3510.2.6)
-           - UEFI boot
-           - with no network
-           - with no disks
-           - delete the CDROM
-    3. Decompress the flatcar qcow2 image
-           > bunzip2 flatcar_production_qemu_image.img.bz2
-    4. Add the qcow2 image to the VM
-           > qm importdisk 900 flatcar_production_qemu_image.img vmroot --format qcow2
-    5. Adopt the new disk into the VM
-           > qm set 900 -efidisk0 vm-900-disk-0.qcow2:0,format=qcow2,efitype=4m,pre-enrolled-keys=1
-    6. Convert the VM to a Template
-
-  see
-    - https://www.flatcar.org/releases
-*/
 variable "vm_count" {
   description = "The number of VMs to provision"
   type        = number
@@ -71,11 +49,11 @@ variable "cpu" {
 }
 variable "memory" {
   type    = number
-  default = 2048
+  default = 4096
 }
 variable "network_bridge" {
   type    = string
-  default = "vmbr0"
+  default = "vmbr2"
 }
 variable "network_tag" {
   type    = number
@@ -150,11 +128,6 @@ variable "pm_password" {
   default     = ""
 }
 
-variable "pm_tls_insecure" {
-  description = "leave tls_insecure set to true unless you have a valid proxmox SSL certificate "
-  default     = true
-  type        = bool
-}
 variable "tags" {
   description = "Tags to apply to the VM"
   type        = list(string)
