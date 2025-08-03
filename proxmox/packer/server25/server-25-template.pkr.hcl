@@ -169,7 +169,7 @@ source "proxmox-iso" "windows2025" {
     cd_label = "Unattend"
     iso_storage_pool = var.iso_storage_pool
     unmount = true
-    device = "sata1"
+    type = "sata"
   }
   
 
