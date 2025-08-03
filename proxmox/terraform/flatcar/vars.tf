@@ -82,7 +82,7 @@ variable "pm_api_url" {
 variable "pm_api_token_id" {
   description = "user@pam!token_id"
   type        = string
-  default     = "root@pam"
+  default     = "user@pam!token_id"
 }
 
 
