@@ -45,7 +45,7 @@ resource "proxmox_vm_qemu" "test_server" {
   #desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
   cicustom = "user=local:snippets/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   agent = 1
-
+  user-data = data.ct_config.ignition_json[count.index].rendered
   define_connection_info = false # ssh connection info is defined in the ignition configuration
 
 
