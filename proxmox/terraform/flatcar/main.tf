@@ -84,8 +84,8 @@ resource "proxmox_vm_qemu" "test_server" {
       }
       ide {
           ide2 {
-              cdrom {
-                  iso = var.iso
+              cloudinit  {
+                  storage = "Ceph"
                }
           }
       }
