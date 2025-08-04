@@ -2,7 +2,7 @@ terraform {
   required_providers {
     proxmox = {
       source  = "telmate/proxmox"
-      version = "2.9.14"
+      version = "3.0.1-rc3"
     }
     ct = {
       source  = "poseidon/ct"
@@ -34,33 +34,23 @@ resource "proxmox_vm_qemu" "test_server" {
   count       = var.vm_count # just want 1 for now, set to 0 and apply to destroy VM
   vmid        = var.vm_count > 1 ? var.vm_id + count.index : var.vm_id
   name        = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
-  
   target_node = var.target_node
 
+  #clone      = var.template_name
+  #full_clone = false
+  #clone_wait = 0
 
-  clone      = var.template_name
-  full_clone = false
-  clone_wait = 0
-
-
+  iso = "NAS:iso/flatcar.iso"
   #args = "-fw_cfg name=opt/org.flatcar-linux/config,file=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
-  desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
-
+  #desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
 
   agent = 1
-  timeouts {
-    create  = "60s"
-    update  = "60s"
-    default = "120s"
-  }
 
   define_connection_info = false # ssh connection info is defined in the ignition configuration
 
 
   bios = "ovmf" 
-
-
   os_type = var.os_type 
   qemu_os = var.os_type  
 
@@ -71,23 +61,23 @@ resource "proxmox_vm_qemu" "test_server" {
   onboot  = true
   scsihw  = "virtio-scsi-single"
 
-
+  disk {
+    slot     = 0
+    size     = "10G"
+    type     = "scsi"
+    storage  = "Ceph"
+    iothread = true
+  }
+  cdrom {
+    storage = "NAS"
+    file    = "iso/flatcar-ign.iso"
+  }
   network {
     model  = "virtio"
     bridge = var.network_bridge
     tag    = var.network_tag
   }
 
-  lifecycle {
-    prevent_destroy       = false # this resource should be immutable **and** disposable
-    create_before_destroy = false
-    ignore_changes        = [
-      disk # the disk is provisioned in the template and inherited (but not defined here]
-    ]
-    replace_triggered_by = [
-      null_resource.node_replace_trigger[count.index].id
-    ]
-  }
 }
 
 
