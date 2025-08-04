@@ -117,13 +117,13 @@ variable "token_secret" {
   default     = ""
 }
 
-variable "pm_user" {
+variable "user" {
   description = "A username for password based authentication of the Proxmox API"
   type        = string
-  default     = ""
+  default     = "root"
 }
 
-variable "pm_password" {
+variable "password" {
   description = "A password for password based authentication of the Proxmox API"
   type        = string
   sensitive   = true
