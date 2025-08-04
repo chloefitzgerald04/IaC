@@ -60,31 +60,11 @@ resource "proxmox_vm_qemu" "test_server" {
   onboot  = true
   scsihw  = "virtio-scsi-single"
 
-    disks {
-        scsi {
-            scsi0 {
-                disk {
-                    discard            = true
-                    emulatessd         = true
-                    iothread           = true
-                    size               = 32
-                    storage            = "Ceph"
-                }
-            }
-        }
-        ide {
-            ide2 {
-                cdrom {
-                    iso = "NAS:iso/flatcar.iso"
-                 }
-            }
-            ide3 {
-                cloudinit  {
-                    storage = "local-lvm"
-                 }
-            }
-        }
-    }
+  clone      = var.template_name
+  full_clone = true
+  clone_wait = 0
+
+
 
   network {
     model  = "virtio"
