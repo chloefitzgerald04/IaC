@@ -70,26 +70,7 @@ resource "proxmox_vm_qemu" "test_server" {
   memory  = var.memory
   onboot  = true
   scsihw  = "virtio-scsi-single"
-  disk {
-      scsi {
-          scsi0 {
-              disk {
-                  discard            = true
-                  emulatessd         = true
-                  iothread           = true
-                  size               = 32
-                  storage            = "Ceph"
-              }
-          }
-      }
-      ide {
-          ide2 {
-              cloudinit  {
-                  storage = "Ceph"
-               }
-          }
-      }
-  }
+
 
   network {
     model  = "virtio"
