@@ -47,16 +47,7 @@ resource "proxmox_vm_qemu" "test_server" {
   cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
 
-  disk {
-    ide {
-      ide2 {
-        cloudinit {
-          storage = "local-lvm"
-        }
-      }
-    }
-  }
- 
+
   agent = 1
   timeouts {
     create  = "60s"
@@ -79,7 +70,26 @@ resource "proxmox_vm_qemu" "test_server" {
   memory  = var.memory
   onboot  = true
   scsihw  = "virtio-scsi-single"
-
+  disks {
+      scsi {
+          scsi0 {
+              disk {
+                  discard            = true
+                  emulatessd         = true
+                  iothread           = true
+                  size               = 32
+                  storage            = "Ceph"
+              }
+          }
+      }
+      ide {
+          ide2 {
+              cdrom {
+                  iso = var.iso
+               }
+          }
+      }
+  }
 
   network {
     model  = "virtio"
