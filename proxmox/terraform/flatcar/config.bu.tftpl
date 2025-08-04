@@ -13,6 +13,10 @@ passwd:
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIVSFwDNe6CRv1hqfQo+G3NzsNHoz2ndSfAUFBnbF4/0 eddsa-key-20250802
 storage:
   files:
+    - path: /etc/someconfig
+      contents:
+        inline: |
+          somethinggggg
     - path: /etc/systemd/network/static.network
       contents:
         inline: |

@@ -43,7 +43,7 @@ resource "proxmox_vm_qemu" "test_server" {
   #args = "-fw_cfg name=opt/org.flatcar-linux/config,file=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   #cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   #desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
-  cicustom = "user=local:snippets/user-data"
+  cicustom = "user=local:snippets/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   agent = 1
 
   define_connection_info = false # ssh connection info is defined in the ignition configuration
@@ -108,7 +108,7 @@ data "ct_config" "ignition_json" {
   snippets = [
     for snippet in var.butane_conf_snippets : templatefile(var.butane_conf, {
       "vm_id"          = var.vm_count > 1 ? var.vm_id + count.index : var.vm_id
-      "vm_name"        = var.vm_count > 1 ? "${var.name}-${count.index + 1}" : var.name
+      "vm_name"        = var.vm_count > 1 ? "${vare.nam}-${count.index + 1}" : var.name
       "vm_count"       = var.vm_count,
       "vm_count_index" = count.index,
     })
