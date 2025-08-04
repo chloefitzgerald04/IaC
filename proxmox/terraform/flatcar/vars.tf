@@ -33,7 +33,7 @@ variable "vm_count" {
 variable "template_name" {
   description = "The name of the Proxmox Flatcar template VM"
   type    = string
-  default = "flatcar_qemu"
+  default = "flatcar-qemu"
 }
 variable "vm_id" {
   type    = number
