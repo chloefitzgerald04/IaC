@@ -64,7 +64,26 @@ resource "proxmox_vm_qemu" "test_server" {
   full_clone = true
   clone_wait = 0
 
-
+    disks {
+        scsi {
+            scsi0 {
+                disk {
+                    discard            = true
+                    emulatessd         = true
+                    iothread           = true
+                    size               = 32
+                    storage            = "Ceph"
+                }
+            }
+        }
+        ide {
+            ide3 {
+                cloudinit  {
+                    storage = "local-lvm"
+                 }
+            }
+        }
+    }
 
   network {
     model  = "virtio"
