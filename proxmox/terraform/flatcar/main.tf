@@ -47,7 +47,7 @@ resource "proxmox_vm_qemu" "test_server" {
   cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
 
-  disks {
+  disk {
     ide {
       ide2 {
         cloudinit {
