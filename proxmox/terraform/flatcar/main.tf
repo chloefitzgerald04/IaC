@@ -43,13 +43,13 @@ resource "proxmox_vm_qemu" "test_server" {
   #args = "-fw_cfg name=opt/org.flatcar-linux/config,file=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   #cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   #desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
-
+  cicustom = "user=local:snippets/user-data"
   agent = 1
 
   define_connection_info = false # ssh connection info is defined in the ignition configuration
 
 
-  bios = "ovmf" 
+  bios = "seabios" 
   os_type = var.os_type 
   qemu_os = var.os_type  
 
@@ -79,8 +79,8 @@ resource "proxmox_vm_qemu" "test_server" {
                  }
             }
             ide3 {
-                cdrom {
-                    iso = "NAS:iso/flatcar-ign.iso"
+                cloudinit  {
+                    storage = "local-lvm"
                  }
             }
         }
