@@ -47,7 +47,7 @@ resource "proxmox_vm_qemu" "test_server" {
     source = data.ct_config.ignition_json[count.index]
     destination = "/var/lib/vz/snippets/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   }
-  cicustom = "user=local:snippets/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
+  cicustom = "user=local:snippets/user-data"
   agent = 1
   #cicustom = data.ct_config.ignition_json[count.index].rendered
   define_connection_info = false # ssh connection info is defined in the ignition configuration
