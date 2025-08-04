@@ -61,7 +61,7 @@ resource "proxmox_vm_qemu" "test_server" {
   scsihw  = "virtio-scsi-single"
 
   clone      = var.template_name
-  full_clone = true
+  full_clone = false
   clone_wait = 0
 
     disks {
