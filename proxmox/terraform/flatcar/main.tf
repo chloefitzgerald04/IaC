@@ -47,26 +47,26 @@ resource "proxmox_vm_qemu" "test_server" {
   cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
 
-    disks {
-        scsi {
-            scsi0 {
-                disk {
-                    discard            = true
-                    emulatessd         = true
-                    iothread           = true
-                    size               = 32
-                    storage            = "Ceph"
-                }
-            }
+  disk {
+      scsi {
+          scsi0 {
+              disk {
+                  discard            = true
+                  emulatessd         = true
+                  iothread           = true
+                  size               = 32
+                  storage            = "Ceph"
+              }
+          }
+      }
+      ide {
+          ide2 {
+              cdrom {
+                  iso = var.iso
+               }
+          }
         }
-        ide {
-            ide2 {
-                cdrom {
-                    iso = var.iso
-                 }
-            }
-        }
-    }
+      }
   agent = 1
   timeouts {
     create  = "60s"
