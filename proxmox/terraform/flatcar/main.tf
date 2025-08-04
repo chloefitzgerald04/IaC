@@ -70,7 +70,7 @@ resource "proxmox_vm_qemu" "test_server" {
   memory  = var.memory
   onboot  = true
   scsihw  = "virtio-scsi-single"
-  disks {
+  disk {
       scsi {
           scsi0 {
               disk {
