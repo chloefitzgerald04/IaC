@@ -40,7 +40,6 @@ resource "proxmox_vm_qemu" "test_server" {
   #full_clone = false
   #clone_wait = 0
 
-  iso = "NAS:iso/flatcar.iso"
   #args = "-fw_cfg name=opt/org.flatcar-linux/config,file=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   #desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
@@ -61,17 +60,32 @@ resource "proxmox_vm_qemu" "test_server" {
   onboot  = true
   scsihw  = "virtio-scsi-single"
 
-  disk {
-    slot     = 0
-    size     = "10G"
-    type     = "scsi"
-    storage  = "Ceph"
-    iothread = true
-  }
-  cdrom {
-    storage = "NAS"
-    file    = "iso/flatcar-ign.iso"
-  }
+    disks {
+        scsi {
+            scsi0 {
+                disk {
+                    discard            = true
+                    emulatessd         = true
+                    iothread           = true
+                    size               = 32
+                    storage            = "Ceph"
+                }
+            }
+        }
+        ide {
+            ide2 {
+                cdrom {
+                    iso = "NAS:iso/flatcar.iso"
+                 }
+            }
+            ide3 {
+                cdrom {
+                    iso = "NAS:iso/flatcar-ign.iso"
+                 }
+            }
+        }
+    }
+
   network {
     model  = "virtio"
     bridge = var.network_bridge
