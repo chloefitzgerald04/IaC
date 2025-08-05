@@ -37,13 +37,7 @@ resource "proxmox_cloud_init_disk" "ci" {
     local-hostname = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
   })
 
-  user_data = <<-EOT
-  #cloud-config
-  users:
-    - default
-  ssh_authorized_keys:
-    - ssh-rsa AAAAB3N......
-  EOT
+  user_data = data.ct_config.ignition_json[count.index].rendered
 
 }
 
