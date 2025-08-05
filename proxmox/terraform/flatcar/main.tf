@@ -96,8 +96,8 @@ resource "proxmox_vm_qemu" "test_server" {
         }
         ide {
             ide3 {
-                cloudinit  {
-                    storage = "Ceph"
+                cdrom  {
+                    iso = "${proxmox_cloud_init_disk.ci.id}"
                  }
             }
         }
