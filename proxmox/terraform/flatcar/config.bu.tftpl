@@ -13,14 +13,10 @@ passwd:
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIVSFwDNe6CRv1hqfQo+G3NzsNHoz2ndSfAUFBnbF4/0 eddsa-key-20250802
 storage:
   files:
-    - path: /etc/someconfig
+    - path: /etc/hostname
+      mode: 0644
       contents:
-        inline: |
-          somethinggggg
-    - path: /etc/someconfignew
-      contents:
-        inline: |
-          somethinggggg newwww
+        inline: "cf-pve-cl-01-flatcar-${vm_count_index + 1}"
     - path: /etc/systemd/network/static.network
       contents:
         inline: |
