@@ -91,10 +91,8 @@ resource "proxmox_vm_qemu" "test_server" {
         }
         ide {
             ide3 {
-                cdrom  {
+                cloudinit  {
                     storage = "local-lvm"
-                    volume  = proxmox_cloud_init_disk.ci.id
-                    size    = proxmox_cloud_init_disk.ci.size
                  }
             }
         }
