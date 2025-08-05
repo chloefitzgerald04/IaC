@@ -30,7 +30,7 @@ resource "proxmox_cloud_init_disk" "ci" {
   count       = var.vm_count # just want 1 for now, set to 0 and apply to destroy VM
   name      = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
   pve_node  = var.target_node
-  storage   = "local-lvm"
+  storage   = "Ceph"
 
   meta_data = yamlencode({
     instance_id    = sha1(var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar")
@@ -92,7 +92,7 @@ resource "proxmox_vm_qemu" "test_server" {
         ide {
             ide3 {
                 cloudinit  {
-                    storage = "local-lvm"
+                    storage = "Ceph"
                  }
             }
         }
