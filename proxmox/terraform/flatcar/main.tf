@@ -37,31 +37,8 @@ resource "proxmox_cloud_init_disk" "ci" {
     local-hostname = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
   })
 
-  user_data = <<-EOT
-{
-  "ignition": { "version": "3.0.0" },
-  "storage": {
-    "files": [{
-      "path": "/etc/someconfignew",
-      "mode": 420,
-      "contents": { "source": "data:,example%20file%0A" }
-    }]
-  },
-  "passwd": {
-    "users": [
-      {
-        "name": "core",
-        "sshAuthorizedKeys": [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIVSFwDNe6CRv1hqfQo+G3NzsNHoz2ndSfAUFBnbF4/0 eddsa-key-20250802"
-        ]
-      }
-    ]
-  }
-}
+  user_data = "/var/lib/vz/snippets/user-data"
 
-
-
-  EOT
 }
 
 
