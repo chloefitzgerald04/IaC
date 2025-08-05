@@ -26,7 +26,18 @@ provider "proxmox" {
   pm_api_token_secret = var.token_secret
 }
 
+resource "proxmox_cloud_init_disk" "ci" {
+  name      = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
+  pve_node  = var.target_node
+  storage   = "local-lvm"
 
+  meta_data = yamlencode({
+    instance_id    = sha1(var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar")
+    local-hostname = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
+  })
+
+  user_data = data.ct_config.ignition_json[count.index].rendered
+}
 
 
 
@@ -42,11 +53,8 @@ resource "proxmox_vm_qemu" "test_server" {
 
   #args = "-fw_cfg name=opt/org.flatcar-linux/config,file=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   #cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
-  desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
-  provisioner "file" {
-    source = data.ct_config.ignition_json[count.index]
-    destination = "/var/lib/vz/snippets/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
-  }
+  #desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
+
   cicustom = "user=local:snippets/user-data"
   agent = 1
   #cicustom = data.ct_config.ignition_json[count.index].rendered
@@ -84,6 +92,8 @@ resource "proxmox_vm_qemu" "test_server" {
             ide3 {
                 cloudinit  {
                     storage = "local-lvm"
+                    volume  = proxmox_cloud_init_disk.ci.id
+                    size    = proxmox_cloud_init_disk.ci.size
                  }
             }
         }
