@@ -97,7 +97,7 @@ resource "proxmox_vm_qemu" "test_server" {
         ide {
             ide3 {
                 cdrom  {
-                    iso = "${proxmox_cloud_init_disk[count.index].ci.id}"
+                    iso = "${proxmox_cloud_init_disk.ci[count.index].id}"
                  }
             }
         }
