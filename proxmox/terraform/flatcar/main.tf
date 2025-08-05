@@ -27,7 +27,7 @@ provider "proxmox" {
 }
 
 resource "proxmox_cloud_init_disk" "ci" {
-  count       = var.vm_count # just want 1 for now, set to 0 and apply to destroy VM
+  count     = var.vm_count # just want 1 for now, set to 0 and apply to destroy VM
   name      = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
   pve_node  = var.target_node
   storage   = "NAS"
@@ -56,7 +56,7 @@ resource "proxmox_vm_qemu" "test_server" {
   #cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   #desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
 
-  cicustom = "user=local:snippets/user-data"
+  #cicustom = "user=local:snippets/user-data"
   agent = 1
   #cicustom = data.ct_config.ignition_json[count.index].rendered
   define_connection_info = false # ssh connection info is defined in the ignition configuration
