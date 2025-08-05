@@ -28,7 +28,7 @@ variable "storage" {
 variable "vm_count" {
   description = "The number of VMs to provision"
   type        = number
-  default     = 3
+  default     = 1
 }
 variable "template_name" {
   description = "The name of the Proxmox Flatcar template VM"
