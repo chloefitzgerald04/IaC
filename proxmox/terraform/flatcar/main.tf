@@ -45,7 +45,7 @@ resource "proxmox_cloud_init_disk" "ci" {
     - ssh-rsa AAAAB3N......
   EOT
 
-
+}
 
 resource "proxmox_vm_qemu" "test_server" {
   count       = var.vm_count # just want 1 for now, set to 0 and apply to destroy VM
