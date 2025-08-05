@@ -37,7 +37,31 @@ resource "proxmox_cloud_init_disk" "ci" {
     local-hostname = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
   })
 
-  user_data = data.ct_config.ignition_json[count.index]
+  user_data = <<-EOT
+{
+  "ignition": { "version": "3.0.0" },
+  "storage": {
+    "files": [{
+      "path": "/etc/someconfignew",
+      "mode": 420,
+      "contents": { "source": "data:,example%20file%0A" }
+    }]
+  },
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "sshAuthorizedKeys": [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIVSFwDNe6CRv1hqfQo+G3NzsNHoz2ndSfAUFBnbF4/0 eddsa-key-20250802"
+        ]
+      }
+    ]
+  }
+}
+
+
+
+  EOT
 }
 
 
@@ -54,7 +78,7 @@ resource "proxmox_vm_qemu" "test_server" {
 
   #args = "-fw_cfg name=opt/org.flatcar-linux/config,file=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
   #cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
-  #desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
+  desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
 
   #cicustom = "user=local:snippets/user-data"
   agent = 1
