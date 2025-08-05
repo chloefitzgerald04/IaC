@@ -42,25 +42,14 @@ resource "proxmox_cloud_init_disk" "ci" {
 }
 
 resource "proxmox_vm_qemu" "test_server" {
-  count       = var.vm_count # just want 1 for now, set to 0 and apply to destroy VM
-  vmid        = var.vm_count > 1 ? var.vm_id + count.index : var.vm_id
+  count       = var.vm_count
+  #vmid        = var.vm_count > 1 ? var.vm_id + count.index : var.vm_id
   name        = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
   target_node = var.target_node
+  desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
 
-  #clone      = var.template_name
-  #full_clone = false
-  #clone_wait = 0
-
-  #args = "-fw_cfg name=opt/org.flatcar-linux/config,file=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
-  #cicustom = "user=/etc/pve/local/ignition/${var.vm_count > 1 ? var.vm_id + count.index : var.vm_id}.ign"
-  #desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
-
-  #cicustom = "user=local:snippets/user-data"
   agent = 1
-  #cicustom = data.ct_config.ignition_json[count.index].rendered
-  define_connection_info = false # ssh connection info is defined in the ignition configuration
-
-
+  define_connection_info = false 
   bios = "seabios" 
   os_type = var.os_type 
   qemu_os = var.os_type  
