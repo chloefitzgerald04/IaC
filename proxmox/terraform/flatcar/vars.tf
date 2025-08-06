@@ -56,9 +56,9 @@ variable "network_bridge" {
   type    = string
   default = "vmbr2"
 }
-variable "network_tag" {
+variable "vlan" {
   type    = number
-  default = 9
+  default = 0
 }
 variable "os_type" {
   type        = string
@@ -86,30 +86,7 @@ variable "token_id" {
 }
 
 
-/*
-  The API secret from the proxmox datacenter.
 
-  The identity must have the permission 'PVEVMAdmin' to the correct path ('/'). Due to possible issues
-  in the API and hoe authorisation is performed, the
-
-  With the incorrect permissions, the following error is generated:
-      Error: user greg@pam has valid credentials but cannot retrieve user list, check privilege
-      separation of api token
-  Which corresponds to the following GET from /var/log/pveproxy/access.log
-      GET /api2/json/access/users?full=1
-
-  Required Privileges
-  ===================
-
-  user must be 'root@pam'                            <=== ugly
-  userid-group, Sys.Audit -> GET users
-
-  see
-    - https://forum.proxmox.com/threads/root-pam-token-api-restricted.83866/
-    - https://pve.proxmox.com/pve-docs/api-viewer/index.html#/access/users
-    - https://github.com/Telmate/terraform-provider-proxmox/issues/385
-    - https://bugzilla.proxmox.com/show_bug.cgi?id=4068
-*/
 variable "token_secret" {
   description = "secret hash"
   type        = string
