@@ -17,6 +17,12 @@ storage:
       mode: 0644
       contents:
         inline: "cf-pve-cl-01-flatcar-${vm_count_index + 1}"
+    - path: /opt/bin/docker-compose
+      contents:
+        source: https://github.com/docker/compose/releases/download/v2.39.1/docker-compose-linux-x86_64
+        verification:
+          hash: sha512-8ad55ea1234e206ecad3e8ecf30f93de5cc764a423bf8ff179b25320f148e475b569ab9ec68d90eacfe97269528ff8fef1746c05381c7d05edc85d2f2c245e69
+      mode: 0755
     - path: /etc/systemd/network/static.network
       contents:
         inline: |
@@ -26,3 +32,28 @@ storage:
           [Network]
           Address=10.0.10.${221 + vm_count_index}/24
           Gateway=10.0.10.1
+
+    - path: /home/core/docker-compose.yml
+      contents:
+        inline: |
+          services:
+            web:
+              image: nginx
+              ports:
+                - 80:80
+      mode: 0644
+      user:
+        name: core
+      group:
+        name: core
+systemd:
+  units:
+    - name: application.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Minimalist docker-compose example
+        [Service]
+        ExecStart=/opt/bin/docker-compose -f /home/core/docker-compose.yml up
+        [Install]
+        WantedBy=multi-user.target
