@@ -43,7 +43,6 @@ resource "proxmox_cloud_init_disk" "ci" {
 
 resource "proxmox_vm_qemu" "test_server" {
   count       = var.vm_count
-  #vmid        = var.vm_count > 1 ? var.vm_id + count.index : var.vm_id
   name        = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
   target_node = var.target_node
   desc = "data:application/vnd.coreos.ignition+json;charset=UTF-8;base64,${base64encode(data.ct_config.ignition_json[count.index].rendered)}"
@@ -51,8 +50,7 @@ resource "proxmox_vm_qemu" "test_server" {
   agent = 1
   define_connection_info = false 
   bios = "seabios" 
-  os_type = var.os_type 
-  qemu_os = var.os_type  
+  os_type = "host"
 
   cores   = var.cores
   sockets = 1
@@ -89,7 +87,7 @@ resource "proxmox_vm_qemu" "test_server" {
   network {
     model  = "virtio"
     bridge = var.network_bridge
-    tag    = var.network_tag
+    tag    = var.vlan
   }
 
 }
