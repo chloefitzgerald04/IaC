@@ -1,9 +1,3 @@
-# A butane configuration for the Flatcar VM, with support for terraform template substitution.
-#
-# see
-#   - https://coreos.github.io/butane/config-flatcar-v1_1/
-#   - https://coreos.github.io/butane/
-#
 version: 1.0.0
 variant: flatcar
 passwd:
@@ -17,12 +11,14 @@ storage:
       mode: 0644
       contents:
         inline: "cf-pve-cl-01-flatcar-${vm_count_index + 1}"
+
     - path: /opt/bin/docker-compose
       contents:
         source: https://github.com/docker/compose/releases/download/v2.39.1/docker-compose-linux-x86_64
         verification:
-          hash: sha512-8ad55ea1234e206ecad3e8ecf30f93de5cc764a423bf8ff179b25320f148e475b569ab9ec68d90eacfe97269528ff8fef1746c05381c7d05edc85d2f2c245e69
+          hash: sha256-a5ea28722d5da628b59226626f7d6c33c89a7ed19e39f750645925242044c9d2
       mode: 0755
+
     - path: /etc/systemd/network/static.network
       contents:
         inline: |
@@ -32,6 +28,19 @@ storage:
           [Network]
           Address=10.0.10.${221 + vm_count_index}/24
           Gateway=10.0.10.1
+          DNS=10.0.10.127
+          DNS=10.0.10.68
+
+
+
+    - path: /etc/flatcar/update.conf
+      overwrite: true
+      contents:
+        inline: |
+          REBOOT_STRATEGY=reboot
+          LOCKSMITHD_REBOOT_WINDOW_START=06:00
+          LOCKSMITHD_REBOOT_WINDOW_LENGTH=1h          
+      mode: 0420
 
     - path: /home/core/docker-compose.yml
       contents:
@@ -46,14 +55,64 @@ storage:
         name: core
       group:
         name: core
+
 systemd:
   units:
-    - name: application.service
+
+    - name: lancache-dns.service
       enabled: true
       contents: |
         [Unit]
-        Description=Minimalist docker-compose example
+        Description=LANCache-DNS Docker Container
+        After=docker.service
+        Requires=docker.service
+
         [Service]
-        ExecStart=/opt/bin/docker-compose -f /home/core/docker-compose.yml up
+        ExecStart=/usr/bin/docker run \
+          --name lancache-dns \
+          --rm \
+          --publish 10.0.10.221:53:53/udp \
+          --publish 10.0.10.221:53:53/tcp \
+          -e USE_GENERIC_CACHE=true \
+          -e LANCACHE_IP="10.0.10.221" \
+          -e DNS_BIND_IP=10.0.10.221 \
+          -e UPSTREAM_DNS="1.1.1.1 8.8.8.8" \
+          lancachenet/lancache-dns:latest
+        ExecStop=/usr/bin/docker stop lancache-dns
+        Restart=always
+        RestartSec=5
+
         [Install]
         WantedBy=multi-user.target
+
+    - name: lancache-monolithic.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=LANCache-Monolithic Docker Container
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        ExecStart=/usr/bin/docker run \
+          --name lancache-monolithic \
+          --rm \
+          --network host \
+          -v /home/core/cache:/data/cache \
+          -v /home/core/logs:/data/logs \
+          -e CACHE_DISK_SIZE=20g \
+          -e MIN_FREE_DISK=1g \
+          -e CACHE_INDEX_SIZE=125m \
+          -e CACHE_MAX_AGE=3650d \
+          -e TZ=Europe/London \
+          -e UPSTREAM_DNS="10.0.10.127" \
+          -p 80:80 \
+          -p 443:443 \
+          lancachenet/monolithic:latest
+        ExecStop=/usr/bin/docker stop lancache-monolithic
+        Restart=always
+        RestartSec=5
+
+        [Install]
+        WantedBy=multi-user.target
+

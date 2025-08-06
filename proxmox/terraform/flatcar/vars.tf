@@ -28,7 +28,7 @@ variable "storage" {
 variable "vm_count" {
   description = "The number of VMs to provision"
   type        = number
-  default     = 3
+  default     = 1
 }
 variable "template_name" {
   description = "The name of the Proxmox Flatcar template VM"
@@ -46,7 +46,6 @@ variable "cores" {
 variable "cpu" {
   type        = string
   default     = "host"
-  description = "e.g. x86-64-v2-AES"
 }
 variable "memory" {
   type    = number
@@ -60,17 +59,7 @@ variable "vlan" {
   type    = number
   default = 0
 }
-variable "os_type" {
-  type        = string
-  default     = "l26"
-  description = "The short OS name identifier"
-}
 
-variable "os_type_name" {
-  type        = string
-  default     = "Linux 2.6 - 6.X Kernel"
-  description = "os_type_name='Linux 2.6 - 6.X Kernel'"
-}
 
 
 variable "pm_api_url" {
@@ -94,18 +83,6 @@ variable "token_secret" {
   default     = ""
 }
 
-variable "user" {
-  description = "A username for password based authentication of the Proxmox API"
-  type        = string
-  default     = "root"
-}
-
-variable "password" {
-  description = "A password for password based authentication of the Proxmox API"
-  type        = string
-  sensitive   = true
-  default     = ""
-}
 
 variable "tags" {
   description = "Tags to apply to the VM"
