@@ -167,3 +167,27 @@ systemd:
 
         [Install]
         WantedBy=multi-user.target
+
+
+
+    - name: zabbix-agent.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Zabbix Agent Docker Container
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        ExecStart=/usr/bin/docker run \
+          --name zabbix-agent \
+          --rm \
+          -e ZBX_HOSTNAME="cf-pve-cl-01-flatcar-${vm_count_index + 1}" \
+          -e ZBX_SERVER_HOST="10.0.10.208" \
+          zabbix/zabbix-agent:tag
+        ExecStop=/usr/bin/docker stop zabbix-agent
+        Restart=always
+        RestartSec=5
+
+        [Install]
+        WantedBy=multi-user.target
