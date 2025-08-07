@@ -133,7 +133,7 @@ systemd:
           -v /home/core/logs:/var/develancacheui/lancachelogs:ro \
           -e TZ=Europe/London \
           -e DNS="10.0.10.221" \
-          -p 8081:80\
+          -p 7301:80\
           devedse/develancacheui_backend:latest
         ExecStop=/usr/bin/docker stop lancache-ui-backend
         Restart=always
@@ -158,8 +158,8 @@ systemd:
           --network host \
           -e TZ=Europe/London \
           -e AllowedHosts=* \
-          -e BACKENDURL=http://10.0.10.221:8081 \
-          -p 8080:80\
+          -e BACKENDURL=http://10.0.10.221:7301 \
+          -p 7302:80\
           devedse/develancacheui_frontend:latest
         ExecStop=/usr/bin/docker stop lancache-ui-frontend
         Restart=always
