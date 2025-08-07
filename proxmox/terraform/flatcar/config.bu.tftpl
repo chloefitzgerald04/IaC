@@ -116,3 +116,54 @@ systemd:
         [Install]
         WantedBy=multi-user.target
 
+    - name: lancacheui-backend.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=LANcache UI Backend Docker Container
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        ExecStart=/usr/bin/docker run \
+          --name lancache-ui-backend \
+          --rm \
+          --network host \
+          -v /home/core/ui/logs:/var/develancacheuidata \
+          -v /home/core/logs:/var/develancacheui/lancachelogs:ro \
+          -e TZ=Europe/London \
+          -e DNS="10.0.10.221" \
+          -p 8081:80\
+          devedse/develancacheui_backend:latest
+        ExecStop=/usr/bin/docker stop lancache-ui-backend
+        Restart=always
+        RestartSec=5
+
+        [Install]
+        WantedBy=multi-user.target
+
+
+    - name: lancacheui-frontend.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=LANcache UI Frontend Docker Container
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        ExecStart=/usr/bin/docker run \
+          --name lancache-ui-frontend \
+          --rm \
+          --network host \
+          -e TZ=Europe/London \
+          -e AllowedHosts=* \
+          -e BACKENDURL=http://10.0.10.221:8081 \
+          -p 8080:80\
+          devedse/develancacheui_frontend:latest
+        ExecStop=/usr/bin/docker stop lancache-ui-frontend
+        Restart=always
+        RestartSec=5
+
+        [Install]
+        WantedBy=multi-user.target
