@@ -42,14 +42,31 @@ storage:
           LOCKSMITHD_REBOOT_WINDOW_LENGTH=1h          
       mode: 0420
 
-    - path: /home/core/docker-compose.yml
+    - path: /home/core/ui/docker-compose.yml
       contents:
         inline: |
           services:
-            web:
-              image: nginx
+            develancacheui_backend:
+              image: devedse/develancacheui_backend:latest
+              restart: unless-stopped
               ports:
-                - 80:80
+                - '7301:80'
+              environment:
+                - TZ=Europe/London
+              volumes:
+                - "/home/core/ui/backend:/var/develancacheuidata"
+                - "/home/core/logs:/var/develancacheui/lancachelogs:ro"
+              dns:
+                - 10.0.10.221
+            develancacheui_frontend:
+              image: devedse/develancacheui_frontend:latest
+              restart: unless-stopped
+              ports:
+                - '7302:80'
+              environment:
+                - BACKENDURL=http://10.0.10.221:7301
+                - AllowedHosts=*
+
       mode: 0644
       user:
         name: core
@@ -116,58 +133,21 @@ systemd:
         [Install]
         WantedBy=multi-user.target
 
-    - name: lancacheui-backend.service
+
+    - name: lancache-ui.service
       enabled: true
       contents: |
         [Unit]
-        Description=LANcache UI Backend Docker Container
+        Description=Minimalist docker-compose example
         After=docker.service
         Requires=docker.service
-
         [Service]
-        ExecStart=/usr/bin/docker run \
-          --name lancache-ui-backend \
-          --rm \
-          --network host \
-          -v /home/core/ui/logs:/var/develancacheuidata \
-          -v /home/core/logs:/var/develancacheui/lancachelogs:ro \
-          -e TZ=Europe/London \
-          -e DNS="10.0.10.221" \
-          -p 7301:80\
-          devedse/develancacheui_backend:latest
-        ExecStop=/usr/bin/docker stop lancache-ui-backend
+        ExecStart=/opt/bin/docker-compose -f /home/core/ui/docker-compose.yml up
+        ExecStop=/opt/bin/docker-compose -f /home/core/ui/docker-compose.yml down
         Restart=always
         RestartSec=5
-
         [Install]
         WantedBy=multi-user.target
-
-
-    - name: lancacheui-frontend.service
-      enabled: true
-      contents: |
-        [Unit]
-        Description=LANcache UI Frontend Docker Container
-        After=docker.service
-        Requires=docker.service
-
-        [Service]
-        ExecStart=/usr/bin/docker run \
-          --name lancache-ui-frontend \
-          --rm \
-          --network host \
-          -e TZ=Europe/London \
-          -e AllowedHosts=* \
-          -e BACKENDURL=http://10.0.10.221:7301 \
-          -p 7302:80\
-          devedse/develancacheui_frontend:latest
-        ExecStop=/usr/bin/docker stop lancache-ui-frontend
-        Restart=always
-        RestartSec=5
-
-        [Install]
-        WantedBy=multi-user.target
-
 
 
     - name: zabbix-agent.service
