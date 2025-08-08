@@ -162,6 +162,8 @@ systemd:
         ExecStart=/usr/bin/docker run \
           --name zabbix-agent \
           --rm \
+          --network host \
+          -p 10050:10050 \
           -e ZBX_HOSTNAME="cf-pve-cl-01-flatcar-${vm_count_index + 1}" \
           -e ZBX_SERVER_HOST="10.0.10.208" \
           zabbix/zabbix-agent:latest
