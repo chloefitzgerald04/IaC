@@ -149,6 +149,7 @@ source "proxmox-iso" "windows2025" {
       model = "virtio"
       bridge = "vmbr2"
       firewall = "false"
+      vlan_tag = "255"
   }
 
   cloud_init = false
