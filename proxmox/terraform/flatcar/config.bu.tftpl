@@ -166,7 +166,7 @@ systemd:
           -p 10050:10050 \
           -e ZBX_HOSTNAME="cf-pve-cl-01-flatcar-${vm_count_index + 1}" \
           -e ZBX_SERVER_HOST="10.0.10.208" \
-          zabbix/zabbix-agent:latest
+          zabbix/zabbix-agent2:latest
         ExecStop=/usr/bin/docker stop zabbix-agent
         Restart=always
         RestartSec=5
