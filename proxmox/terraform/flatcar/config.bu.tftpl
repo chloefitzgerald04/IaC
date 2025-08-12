@@ -24,14 +24,11 @@ storage:
         inline: |
           [Match]
           Name=eth0
-
           [Network]
           Address=10.0.10.${221 + vm_count_index}/24
           Gateway=10.0.10.1
           DNS=10.0.10.127
           DNS=10.0.10.68
-
-
 
     - path: /etc/flatcar/update.conf
       overwrite: true
@@ -41,6 +38,9 @@ storage:
           LOCKSMITHD_REBOOT_WINDOW_START=06:00
           LOCKSMITHD_REBOOT_WINDOW_LENGTH=1h          
       mode: 0420
+
+    - path: /var/run/docker.sock
+      mode: 0644
 
     - path: /home/core/ui/docker-compose.yml
       contents:
