@@ -54,14 +54,14 @@ storage:
                 - "/home/core/ui/backend:/var/develancacheuidata"
                 - "/home/core/logs:/var/develancacheui/lancachelogs:ro"
               dns:
-                - 10.0.10.221
+                - 10.0.10.${221 + vm_count_index}
             develancacheui_frontend:
               image: devedse/develancacheui_frontend:latest
               restart: unless-stopped
               ports:
                 - '7302:80'
               environment:
-                - BACKENDURL=http://10.0.10.221:7301
+                - BACKENDURL=http:/10.0.10.${221 + vm_count_index}:7301
                 - AllowedHosts=*
 
       mode: 0644
@@ -85,11 +85,11 @@ systemd:
         ExecStart=/usr/bin/docker run \
           --name lancache-dns \
           --rm \
-          --publish 10.0.10.221:53:53/udp \
-          --publish 10.0.10.221:53:53/tcp \
+          --publish 10.0.10.${221 + vm_count_index}:53:53/udp \
+          --publish 10.0.10.${221 + vm_count_index}:53:53/tcp \
           -e USE_GENERIC_CACHE=true \
-          -e LANCACHE_IP="10.0.10.221" \
-          -e DNS_BIND_IP=10.0.10.221 \
+          -e LANCACHE_IP="10.0.10.${221 + vm_count_index}" \
+          -e DNS_BIND_IP=10.0.10.${221 + vm_count_index} \
           -e UPSTREAM_DNS="1.1.1.1 8.8.8.8" \
           lancachenet/lancache-dns:latest
         ExecStop=/usr/bin/docker stop lancache-dns
