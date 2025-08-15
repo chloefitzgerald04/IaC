@@ -161,7 +161,6 @@ systemd:
           --rm \
           --network host \
           --user 0:0 \
-          -p 10050:10050 \
           -v /var/run/docker.sock:/var/run/docker.sock:ro \
           -e ZBX_HOSTNAME="cf-pve-cl-01-flatcar-${vm_count_index + 1}" \
           -e ZBX_SERVER_HOST="10.0.10.208" \
