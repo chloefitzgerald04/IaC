@@ -1,4 +1,4 @@
-services:
+services:<br/>
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
