@@ -60,6 +60,11 @@ variable "vlan" {
   default = 0
 }
 
+variable "docker-compose-template"{
+  description = "Pass through a docker compose template URL to be added into butane"
+  type        = string
+  default     = "https://raw.githubusercontent.com/chloefitzgerald04/IaC/refs/heads/main/demo/docker-compose.yaml"
+}
 
 
 variable "pm_api_url" {
@@ -89,3 +94,5 @@ variable "tags" {
   type        = list(string)
   default     = ["flatcar"]
 }
+
+

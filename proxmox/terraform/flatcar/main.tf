@@ -92,6 +92,7 @@ resource "proxmox_vm_qemu" "test_server" {
 }
 
 
+
 data "ct_config" "ignition_json" {
   count   = var.vm_count
   content = templatefile(var.butane_conf, {
@@ -99,6 +100,7 @@ data "ct_config" "ignition_json" {
     "vm_name"        = var.vm_count > 1 ? "${var.name}-${count.index + 1}" : var.name
     "vm_count"       = var.vm_count,
     "vm_count_index" = count.index,
+    "docker-compose-template" = var.docker-compose-template,
   })
   strict       = false
   pretty_print = true

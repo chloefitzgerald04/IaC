@@ -12,6 +12,12 @@ storage:
       contents:
         inline: "cf-pve-cl-01-flatcar-${vm_count_index + 1}"
 
+    - path: /home/core/test/docker-compose.yaml
+      mode: 0644
+      contents:
+        source: ${docker-compose-template}
+
+
     - path: /opt/bin/docker-compose
       contents:
         source: https://github.com/docker/compose/releases/download/v2.39.1/docker-compose-linux-x86_64
