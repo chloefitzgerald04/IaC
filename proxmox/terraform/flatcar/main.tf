@@ -95,7 +95,7 @@ resource "proxmox_vm_qemu" "test_server" {
 
 data "ct_config" "ignition_json" {
   count   = var.vm_count
-  content = templatefile(var.butane_conf, {
+  content = templatefile("./${count.index + 1}-${var.butane_conf}", {
     "vm_id"          = var.vm_count > 1 ? var.vm_id + count.index : var.vm_id
     "vm_name"        = var.vm_count > 1 ? "${var.name}-${count.index + 1}" : var.name
     "vm_count"       = var.vm_count,
@@ -106,7 +106,7 @@ data "ct_config" "ignition_json" {
   pretty_print = true
 
   snippets = [
-    for snippet in var.butane_conf_snippets : templatefile(var.butane_conf, {
+    for snippet in var.butane_conf_snippets : templatefile("${count.index + 1}-${var.butane_conf}", {
       "vm_id"          = var.vm_count > 1 ? var.vm_id + count.index : var.vm_id
       "vm_name"        = var.vm_count > 1 ? "${var.name}-${count.index + 1}" : var.name
       "vm_count"       = var.vm_count,

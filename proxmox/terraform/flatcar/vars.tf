@@ -7,7 +7,7 @@ variable "name" {
 variable "butane_conf" {
   type        = string
   description = "YAML Butane configuration for the VM"
-  default     = "./config.bu.tftpl"
+  default     = "config.bu.tftpl"
 }
 variable "butane_conf_snippets" {
   type        = list(string)

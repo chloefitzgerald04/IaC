@@ -1,7 +1,61 @@
 services:
+
+  prowlarr:
+    container_name: prowlarr
+    image: ghcr.io/hotio/prowlarr
+    networks:
+      - arr
+    ports:
+      - "9696:9696"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Europe/London
+    volumes:
+      - ./prowlarr/config:/config
+    restart: always
+
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    networks:
+      - arr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - WEBUI_PORT=8080
+    volumes:
+      - ./qbittorrent/config:/config
+      - /mnt/media/downloads:/downloads
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: unless-stopped
+  
+    sonarr:
+    container_name: sonarr
+    image: ghcr.io/hotio/sonarr:latest
+    networks:
+      - arr
+    ports:
+      - "8989:8989"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=Europe/London
+    volumes:
+      - ./sonarr/config:/config
+      - /mnt/media/downloads:/downloads
+      - /mnt/media/TV:/TV
+    restart: always
+
   radarr:
-    image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
+    image: lscr.io/linuxserver/radarr:latest
     networks:
       - arr
     environment:
@@ -9,12 +63,14 @@ services:
       - PGID=1000
       - TZ=Europe/London
     volumes:
-      - /home/arr/radarr/config:/config
-      - /home/arr/media/Movies/:/movies
-      - /home/arr/media/downloads:/downloads
+      - ./radarr/config:/config
+      - /mnt/media/Movies/:/movies
+      - /mnt/media/downloads:/downloads
     ports:
       - 7878:7878
     restart: always
+
+
 networks:
   arr:
     name: arr
