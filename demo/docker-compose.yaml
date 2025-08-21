@@ -35,7 +35,7 @@ services:
       - 6881:6881/udp
     restart: unless-stopped
   
-    sonarr:
+  sonarr:
     container_name: sonarr
     image: ghcr.io/hotio/sonarr:latest
     networks:
