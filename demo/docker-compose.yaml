@@ -74,4 +74,3 @@ services:
 networks:
   arr:
     name: arr
-    external: true
