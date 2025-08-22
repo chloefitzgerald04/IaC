@@ -38,30 +38,55 @@ storage:
           LOCKSMITHD_REBOOT_WINDOW_START=06:00
           LOCKSMITHD_REBOOT_WINDOW_LENGTH=1h          
       mode: 0420
+  directories:
+    - path: /mnt/media
+      mode: 0777
+      overwrite: true
 
-    - path: /home/core/docker-compose.yaml
-      contents:
-        source: ${docker-compose-template}
-      mode: 0644
-      user:
-        name: core
-      group:
-        name: core
 
 systemd:
   units:
+    - name: mnt-media.mount
+      enabled: true
+      contents: |
+        [Unit]
+        Before=remote-fs.target
+        [Mount]
+        What=//10.0.10.210/nas/media
+        Where=/mnt/media
+        Options=username=plex,password={share_password},domain=fitzgerald,forceuid,forcegid,uid=500,gid=500
+        Type=cifs
+        [Install]
+        WantedBy=remote-fs.target
 
+
+    - name: first-boot.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=first-boot.service
+
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        Type=oneshot
+        ExecStart=/bin/bash -c "if ! [ -d '/home/core/arr' ]; then git clone https://github.com/chloefitzgerald04/arr-stack-demo.git /home/core/arr; fi; sudo chown -R core:core /home/core/arr"
+        RemainAfterExit=yes
+
+        [Install]
+        WantedBy=multi-user.target
 
     - name: docker-compose.service
       enabled: true
       contents: |
         [Unit]
         Description=Minimalist docker-compose example
-        After=docker.service
-        Requires=docker.service
+        After=first-boot.service
+        Requires=first-boot.service
         [Service]
-        ExecStart=/opt/bin/docker-compose -f /home/core/docker-compose.yaml up
-        ExecStop=/opt/bin/docker-compose -f /home/core/docker-compose.yaml down
+        ExecStart=/opt/bin/docker-compose -f /home/core/arr/docker-compose.yaml up
+        ExecStop=/opt/bin/docker-compose -f /home/core/arr/docker-compose.yaml down
         Restart=always
         RestartSec=5
         [Install]
