@@ -100,6 +100,7 @@ data "ct_config" "ignition_json" {
     "vm_name"        = var.vm_count > 1 ? "${var.name}-${count.index + 1}" : var.name
     "vm_count"       = var.vm_count,
     "vm_count_index" = count.index,
+    "share_password" = var.share_password,
     "docker-compose-template" = var.docker-compose-template,
   })
   strict       = false
@@ -110,6 +111,7 @@ data "ct_config" "ignition_json" {
       "vm_id"          = var.vm_count > 1 ? var.vm_id + count.index : var.vm_id
       "vm_name"        = var.vm_count > 1 ? "${var.name}-${count.index + 1}" : var.name
       "vm_count"       = var.vm_count,
+      "share_password" = var.share_password,
       "vm_count_index" = count.index,
     })
   ]

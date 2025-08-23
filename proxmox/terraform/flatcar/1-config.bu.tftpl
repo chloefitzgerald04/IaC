@@ -54,7 +54,7 @@ systemd:
         [Mount]
         What=//10.0.10.210/nas/media
         Where=/mnt/media
-        Options=username=plex,password={share_password},domain=fitzgerald,forceuid,forcegid,uid=500,gid=500
+        Options=username=plex,password=${share_password},domain=fitzgerald,forceuid,forcegid,uid=500,gid=500
         Type=cifs
         [Install]
         WantedBy=remote-fs.target

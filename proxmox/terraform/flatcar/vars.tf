@@ -14,11 +14,15 @@ variable "butane_conf_snippets" {
   default     = []
   description = "Additional YAML Butane configuration(s) for the VM"
 }
-variable "target_node" {
-  description = "The name of the target proxmox node"
+
+variable "docker-compose-template"{
+  description = "Pass through a docker compose template URL to be added into butane"
   type        = string
-  default     = "pve-02"
+  default     = "https://raw.githubusercontent.com/chloefitzgerald04/IaC/refs/heads/main/demo/docker-compose.yaml"
 }
+
+
+
 variable "storage" {
   description = "The name of the storage used for storing VM images"
   type        = string
@@ -39,6 +43,13 @@ variable "vm_id" {
   type    = number
   default = 0
 }
+
+variable "tags" {
+  description = "Tags to apply to the VM"
+  type        = list(string)
+  default     = ["flatcar"]
+}
+
 variable "cores" {
   type    = number
   default = 2
@@ -60,12 +71,6 @@ variable "vlan" {
   default = 0
 }
 
-variable "docker-compose-template"{
-  description = "Pass through a docker compose template URL to be added into butane"
-  type        = string
-  default     = "https://raw.githubusercontent.com/chloefitzgerald04/IaC/refs/heads/main/demo/docker-compose.yaml"
-}
-
 
 variable "pm_api_url" {
   description = "The FQDN and path to the API of the proxmox server e.g. https://example.com:8006/api2/json"
@@ -73,26 +78,28 @@ variable "pm_api_url" {
   default     = "https://10.0.0.102:8006/api2/json"
 }
 
+variable "target_node" {
+  description = "The name of the target proxmox node"
+  type        = string
+  default     = "pve-02"
+}
 variable "token_id" {
-  description = "user@pam!token_id"
+  description = "user@pam!token_id in tfvars"
   type        = string
   default     = "user@pam!token_id"
 }
 
-
-
 variable "token_secret" {
-  description = "secret hash"
+  description = "secret hash in tfvars"
   type        = string
   sensitive   = true
   default     = ""
 }
 
 
-variable "tags" {
-  description = "Tags to apply to the VM"
-  type        = list(string)
-  default     = ["flatcar"]
+variable "share_password" {
+  description = "secret hash in tfvars"
+  type        = string
+  sensitive   = true
+  default     = ""
 }
-
-
