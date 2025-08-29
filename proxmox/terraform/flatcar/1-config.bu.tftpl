@@ -52,7 +52,7 @@ systemd:
         [Unit]
         Before=remote-fs.target
         [Mount]
-        What=//10.0.10.210/nas/media
+        What=//10.0.10.210/nas/plex
         Where=/mnt/media
         Options=username=plex,password=${share_password},domain=fitzgerald,forceuid,forcegid,uid=500,gid=500
         Type=cifs
