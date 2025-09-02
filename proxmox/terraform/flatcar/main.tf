@@ -24,7 +24,7 @@ provider "proxmox" {
 }
 
 resource "proxmox_cloud_init_disk" "ci" {
-  count     = var.vm_count # just want 1 for now, set to 0 and apply to destroy VM
+  count     = var.vm_count # just want 1 for now, set to 0 and apply to destroy VM, or more than 1 to increase amount of vms
   name      = var.vm_count > 1 ? "cf-pve-cl-01-flatcar-${count.index + 1}" : "cf-pve-cl-01-flatcar"
   pve_node  = var.target_node
   storage   = "NAS"
